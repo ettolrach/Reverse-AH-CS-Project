@@ -1,5 +1,10 @@
 import pygame
 
+class Sqaure(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface([80,80])
+
 class Disc(pygame.sprite.Sprite):
     def __init__(self, initialColour):
         pygame.sprite.Sprite.__init__(self)
