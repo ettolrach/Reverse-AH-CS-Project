@@ -26,14 +26,14 @@ def set_up_board(screen):
     newBoard = [None for i in range(BOARD_SIZE**2)]
     # Use i = x + wy where i is the desired index in the 1D list, x and y are coordinates, and w is the width.
     # Also note that the y-axis goes from top to bottom, not bottom to top like how it usually does.
-    newBoard[3 + 8*3] = classes.Disc(True, RIGHT_OFFSET + 3 * SQUARE_SIZE, TOP_OFFSET + 3 * SQUARE_SIZE)
-    newBoard[4 + 8*3] = classes.Disc(False, RIGHT_OFFSET + 4 * SQUARE_SIZE, TOP_OFFSET + 3 * SQUARE_SIZE)
-    newBoard[3 + 8*4] = classes.Disc(False, RIGHT_OFFSET + 3 * SQUARE_SIZE, TOP_OFFSET + 4 * SQUARE_SIZE)
-    newBoard[4 + 8*4] = classes.Disc(True, RIGHT_OFFSET + 4 * SQUARE_SIZE, TOP_OFFSET + 4 * SQUARE_SIZE)
-    newGroup.add(newBoard[3 + 8*3])
-    newGroup.add(newBoard[4 + 8*3])
-    newGroup.add(newBoard[3 + 8*4])
-    newGroup.add(newBoard[4 + 8*4])
+    newBoard[3 + BOARD_SIZE*3] = classes.Disc(True, RIGHT_OFFSET + 3 * SQUARE_SIZE, TOP_OFFSET + 3 * SQUARE_SIZE)
+    newBoard[4 + BOARD_SIZE*3] = classes.Disc(False, RIGHT_OFFSET + 4 * SQUARE_SIZE, TOP_OFFSET + 3 * SQUARE_SIZE)
+    newBoard[3 + BOARD_SIZE*4] = classes.Disc(False, RIGHT_OFFSET + 3 * SQUARE_SIZE, TOP_OFFSET + 4 * SQUARE_SIZE)
+    newBoard[4 + BOARD_SIZE*4] = classes.Disc(True, RIGHT_OFFSET + 4 * SQUARE_SIZE, TOP_OFFSET + 4 * SQUARE_SIZE)
+    newGroup.add(newBoard[3 + BOARD_SIZE*3])
+    newGroup.add(newBoard[4 + BOARD_SIZE*3])
+    newGroup.add(newBoard[3 + BOARD_SIZE*4])
+    newGroup.add(newBoard[4 + BOARD_SIZE*4])
     newGroup.draw(screen)
 
     return newBoard, newGroup
@@ -46,12 +46,12 @@ while stopGame == False:
         if event.type == pygame.QUIT:
             stopGame = True
         if event.type == MOUSEBUTTONDOWN:
-            x = int((pygame.mouse.get_pos()[0] - RIGHT_OFFSET) / 80)
-            y = int((pygame.mouse.get_pos()[1] - TOP_OFFSET) / 80)
+            x = int((pygame.mouse.get_pos()[0] - RIGHT_OFFSET) / SQUARE_SIZE)
+            y = int((pygame.mouse.get_pos()[1] - TOP_OFFSET) / SQUARE_SIZE)
             print(x,y)
 
-            boardList[x + 8*y] = classes.Disc(whiteToPlay, RIGHT_OFFSET + x * SQUARE_SIZE, TOP_OFFSET + y * SQUARE_SIZE)
-            boardSpriteGroup.add(boardList[x + 8*y])
+            boardList[x + BOARD_SIZE*y] = classes.Disc(whiteToPlay, RIGHT_OFFSET + x * SQUARE_SIZE, TOP_OFFSET + y * SQUARE_SIZE)
+            boardSpriteGroup.add(boardList[x + BOARD_SIZE*y])
             boardSpriteGroup.draw(pygame.display.get_surface())
             whiteToPlay = not whiteToPlay
 
