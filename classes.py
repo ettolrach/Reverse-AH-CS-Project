@@ -10,9 +10,9 @@ class Disc(pygame.sprite.Sprite):
         self.rect.y = yPos
 
         if isWhiteInitially == True:
-            self.image = pygame.image.load(os.path.join("sprites", "blackDisc.png")).convert_alpha()
-        else:
             self.image = pygame.image.load(os.path.join("sprites", "whiteDisc.png")).convert_alpha()
+        else:
+            self.image = pygame.image.load(os.path.join("sprites", "blackDisc.png")).convert_alpha()
     
     def change_colour(self):
         if self.isWhite == True:
