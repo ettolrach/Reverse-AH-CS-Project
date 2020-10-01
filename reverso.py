@@ -1,11 +1,14 @@
 import pygame, classes, os
+from pygame.constants import MOUSEBUTTONDOWN
 pygame.init()
 
-RESOLUTION = [640,720]
+# Game variables
 windowTitle = "Reverso"
 stopGame = False
 backgroundColour = ( 96,191, 77)
 black = (  0,  0,  0)
+whiteToPlay = True
+RESOLUTION = [640,720]
 SQUARE_SIZE = 80
 BOARD_SIZE = 8
 TOP_OFFSET = 40
@@ -35,13 +38,22 @@ def set_up_board(screen):
 
     return newBoard, newGroup
 
-gameBoardList, gameBoardSpriteGroup = set_up_board(pygame.display.get_surface())
+boardList, boardSpriteGroup = set_up_board(pygame.display.get_surface())
 pygame.display.update()
 
 while stopGame == False:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             stopGame = True
+        if event.type == MOUSEBUTTONDOWN:
+            x = int((pygame.mouse.get_pos()[0] - RIGHT_OFFSET) / 80)
+            y = int((pygame.mouse.get_pos()[1] - TOP_OFFSET) / 80)
+            print(x,y)
+
+            boardList[x + 8*y] = classes.Disc(whiteToPlay, RIGHT_OFFSET + x * SQUARE_SIZE, TOP_OFFSET + y * SQUARE_SIZE)
+            boardSpriteGroup.add(boardList[x + 8*y])
+            boardSpriteGroup.draw(pygame.display.get_surface())
+            whiteToPlay = not whiteToPlay
 
     pygame.display.update()
     clock.tick(20)
