@@ -48,7 +48,9 @@ while stopGame == False:
         if event.type == MOUSEBUTTONDOWN:
             x = int((pygame.mouse.get_pos()[0] - RIGHT_OFFSET) / SQUARE_SIZE)
             y = int((pygame.mouse.get_pos()[1] - TOP_OFFSET) / SQUARE_SIZE)
-            print(x,y)
+            
+            if (boardList[x + BOARD_SIZE*y] != None):
+                continue
 
             boardList[x + BOARD_SIZE*y] = classes.Disc(whiteToPlay, RIGHT_OFFSET + x * SQUARE_SIZE, TOP_OFFSET + y * SQUARE_SIZE)
             boardSpriteGroup.add(boardList[x + BOARD_SIZE*y])
