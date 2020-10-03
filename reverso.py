@@ -38,6 +38,10 @@ def set_up_board(screen):
 
     return newBoard, newGroup
 
+def check_if_move_legal(boardList, x, y, whiteToPlay):
+    if (boardList[x + BOARD_SIZE*y] != None):
+        return False
+
 boardList, boardSpriteGroup = set_up_board(pygame.display.get_surface())
 pygame.display.update()
 
@@ -49,7 +53,7 @@ while stopGame == False:
             x = int((pygame.mouse.get_pos()[0] - RIGHT_OFFSET) / SQUARE_SIZE)
             y = int((pygame.mouse.get_pos()[1] - TOP_OFFSET) / SQUARE_SIZE)
             
-            if (boardList[x + BOARD_SIZE*y] != None):
+            if (check_if_move_legal(boardList, x, y, whiteToPlay) == False):
                 continue
 
             boardList[x + BOARD_SIZE*y] = classes.Disc(whiteToPlay, RIGHT_OFFSET + x * SQUARE_SIZE, TOP_OFFSET + y * SQUARE_SIZE)
