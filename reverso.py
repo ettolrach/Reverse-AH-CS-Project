@@ -30,10 +30,7 @@ def set_up_board(screen):
     newBoard[4 + BOARD_SIZE*3] = classes.Disc(False, RIGHT_OFFSET + 4 * SQUARE_SIZE, TOP_OFFSET + 3 * SQUARE_SIZE)
     newBoard[3 + BOARD_SIZE*4] = classes.Disc(False, RIGHT_OFFSET + 3 * SQUARE_SIZE, TOP_OFFSET + 4 * SQUARE_SIZE)
     newBoard[4 + BOARD_SIZE*4] = classes.Disc(True, RIGHT_OFFSET + 4 * SQUARE_SIZE, TOP_OFFSET + 4 * SQUARE_SIZE)
-    newGroup.add(newBoard[3 + BOARD_SIZE*3])
-    newGroup.add(newBoard[4 + BOARD_SIZE*3])
-    newGroup.add(newBoard[3 + BOARD_SIZE*4])
-    newGroup.add(newBoard[4 + BOARD_SIZE*4])
+    newGroup.add(newBoard[3 + BOARD_SIZE*3], newBoard[4 + BOARD_SIZE*3], newBoard[3 + BOARD_SIZE*4], newBoard[4 + BOARD_SIZE*4])
     newGroup.draw(screen)
 
     return newBoard, newGroup
