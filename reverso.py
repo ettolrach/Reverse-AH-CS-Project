@@ -45,15 +45,11 @@ def get_discs_to_flip(boardList, x, y, changeX, changeY, whiteToPlay):
         x += changeX
         y += changeY
 
-        if y <= 0 or x <= 0 or y >= 8 or x >= 8:
-            break
-
-        if (boardList[x + BOARD_SIZE*y] == None or boardList[x + BOARD_SIZE*(y)].isWhite is whiteToPlay):
-            if boardList[x + BOARD_SIZE*y] == None:
-                listToFlip.clear()
+        if boardList[x + BOARD_SIZE*y] == None or (y < 0 or x < 0 or y > 7 or x > 7):
+            return []
+        elif boardList[x + BOARD_SIZE*(y)].isWhite is whiteToPlay:
             break
         listToFlip.append(x + BOARD_SIZE*y)
-
     return listToFlip
 
 boardList, boardSpriteGroup = set_up_board(pygame.display.get_surface())
