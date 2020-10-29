@@ -7,7 +7,7 @@ windowTitle = "Reverso"
 stopGame = False
 backgroundColour = ( 96,191, 77)
 black = (  0,  0,  0)
-whiteToPlay = True
+whiteToPlay = False
 RESOLUTION = [640,720]
 SQUARE_SIZE = 80
 BOARD_SIZE = 8
@@ -45,7 +45,9 @@ def get_discs_to_flip(boardList, x, y, changeX, changeY, whiteToPlay):
         x += changeX
         y += changeY
 
-        if boardList[x + BOARD_SIZE*y] == None or (y < 0 or x < 0 or y > 7 or x > 7):
+        if (y < 0 or x < 0 or y > 7 or x > 7):
+            return []
+        if boardList[x + BOARD_SIZE*y] == None:
             return []
         elif boardList[x + BOARD_SIZE*(y)].isWhite is whiteToPlay:
             break
