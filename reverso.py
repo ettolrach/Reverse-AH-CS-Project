@@ -7,12 +7,13 @@ windowTitle = "Reverso"
 stopGame = False
 backgroundColour = ( 96,191, 77)
 black = (  0,  0,  0)
-whiteToPlay = True
+whiteToPlay = False
 RESOLUTION = [640,720]
 SQUARE_SIZE = 80
 BOARD_SIZE = 8
 TOP_OFFSET = 40
 RIGHT_OFFSET = 1
+DIRECTIONS = [(0,-1), (1,-1), (1,0), (1,1), (0,1), (-1,1), (-1, 0), (-1,-1)]
 
 pygame.display.set_mode(RESOLUTION)
 pygame.display.set_caption(windowTitle)
@@ -35,9 +36,23 @@ def set_up_board(screen):
 
     return newBoard, newGroup
 
-def check_if_move_legal(boardList, x, y, whiteToPlay):
+def get_discs_to_flip(boardList, x, y, changeX, changeY, whiteToPlay):
+    listToFlip = []
+    # Check whether the sqaure that was clicked is empty. If it isn't, then it's an illegal move.
     if (boardList[x + BOARD_SIZE*y] != None):
-        return False
+        return listToFlip
+    while True:
+        x += changeX
+        y += changeY
+
+        if (y < 0 or x < 0 or y > 7 or x > 7):
+            return []
+        if boardList[x + BOARD_SIZE*y] == None:
+            return []
+        elif boardList[x + BOARD_SIZE*(y)].isWhite is whiteToPlay:
+            break
+        listToFlip.append(x + BOARD_SIZE*y)
+    return listToFlip
 
 boardList, boardSpriteGroup = set_up_board(pygame.display.get_surface())
 pygame.display.update()
@@ -49,14 +64,23 @@ while stopGame == False:
         if event.type == MOUSEBUTTONDOWN:
             x = int((pygame.mouse.get_pos()[0] - RIGHT_OFFSET) / SQUARE_SIZE)
             y = int((pygame.mouse.get_pos()[1] - TOP_OFFSET) / SQUARE_SIZE)
-            
-            if (check_if_move_legal(boardList, x, y, whiteToPlay) == False):
-                continue
 
-            boardList[x + BOARD_SIZE*y] = classes.Disc(whiteToPlay, RIGHT_OFFSET + x * SQUARE_SIZE, TOP_OFFSET + y * SQUARE_SIZE)
-            boardSpriteGroup.add(boardList[x + BOARD_SIZE*y])
+            totalFlip = []
+            for direction in DIRECTIONS:
+                toFlip = get_discs_to_flip(boardList, x, y, direction[0], direction[1], whiteToPlay)
+                if (toFlip == []):
+                    continue
+                totalFlip.extend(toFlip)
+            
+            if len(totalFlip) > 0:
+                for index in totalFlip:
+                    boardList[index].change_colour()
+                boardList[x + BOARD_SIZE*y] = classes.Disc(whiteToPlay, RIGHT_OFFSET + x * SQUARE_SIZE, TOP_OFFSET + y * SQUARE_SIZE)
+                boardSpriteGroup.add(boardList[x + BOARD_SIZE*y])
+                whiteToPlay = not whiteToPlay
+                xLetter = chr(97+x)
+                print(xLetter + str(y))
             boardSpriteGroup.draw(pygame.display.get_surface())
-            whiteToPlay = not whiteToPlay
 
     pygame.display.update()
     clock.tick(20)
