@@ -3,7 +3,7 @@ from pygame.constants import MOUSEBUTTONDOWN
 pygame.init()
 
 # Game variables
-windowTitle = "Reverso"
+windowTitle = "Reverse!"
 stopGame = False
 backgroundColour = ( 96,191, 77)
 black = (  0,  0,  0)
