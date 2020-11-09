@@ -54,32 +54,61 @@ def get_discs_to_flip(boardList, x, y, changeX, changeY, whiteToPlay):
         listToFlip.append(x + BOARD_SIZE*y)
     return listToFlip
 
+def make_move(boardList, x, y, whiteToPlay):
+    totalFlip = []
+    for direction in DIRECTIONS:
+        toFlip = get_discs_to_flip(boardList, x, y, direction[0], direction[1], whiteToPlay)
+        if (toFlip == []):
+            continue
+        totalFlip.extend(toFlip)
+
+    return totalFlip
+
+def place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay):
+    boardList[x + BOARD_SIZE*y] = classes.Disc(whiteToPlay, RIGHT_OFFSET + x * SQUARE_SIZE, TOP_OFFSET + y * SQUARE_SIZE)
+    boardSpriteGroup.add(boardList[x + BOARD_SIZE*y])
+    whiteToPlay = not whiteToPlay
+
+    return boardList, boardSpriteGroup, whiteToPlay
+
+def are_legal_moves_available(boardList, x, y, whiteToPlay):
+    for y in range(BOARD_SIZE):
+        for x in range(BOARD_SIZE):
+            if make_move(boardList, x, y, whiteToPlay) != []:
+                return True
+
 boardList, boardSpriteGroup = set_up_board(pygame.display.get_surface())
 pygame.display.update()
 
+# Main game loop.
 while stopGame == False:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             stopGame = True
         if event.type == MOUSEBUTTONDOWN:
+            # Get the x and y coordinates from the pixel value of the mouse click.
             x = int((pygame.mouse.get_pos()[0] - RIGHT_OFFSET) / SQUARE_SIZE)
             y = int((pygame.mouse.get_pos()[1] - TOP_OFFSET) / SQUARE_SIZE)
-
             totalFlip = []
-            for direction in DIRECTIONS:
-                toFlip = get_discs_to_flip(boardList, x, y, direction[0], direction[1], whiteToPlay)
-                if (toFlip == []):
-                    continue
-                totalFlip.extend(toFlip)
-            
-            if len(totalFlip) > 0:
-                for index in totalFlip:
-                    boardList[index].change_colour()
-                boardList[x + BOARD_SIZE*y] = classes.Disc(whiteToPlay, RIGHT_OFFSET + x * SQUARE_SIZE, TOP_OFFSET + y * SQUARE_SIZE)
-                boardSpriteGroup.add(boardList[x + BOARD_SIZE*y])
-                whiteToPlay = not whiteToPlay
+
+            if are_legal_moves_available(boardList, x, y, whiteToPlay) == True:
+                totalFlip = make_move(boardList, x, y, whiteToPlay)
+                if totalFlip != []:
+                    # then flip the discs at the coordinates in the list 'totalFlip'.
+                    for index in totalFlip:
+                        boardList[index].change_colour()
+
+                    # Place the disc at the clicked coordinate and update appropriate variables.
+                    boardList, boardSpriteGroup, whiteToPlay = place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay)
+                    # Log the move for debugging purposes.
+                    xLetter = chr(97+x)
+                    print(xLetter + str(y+1))
+            else:
+                boardList, boardSpriteGroup, whiteToPlay = place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay)
+                # Log the move for debugging purposes.
                 xLetter = chr(97+x)
-                print(xLetter + str(y))
+                print(xLetter + str(y+1))
+            
             boardSpriteGroup.draw(pygame.display.get_surface())
 
     pygame.display.update()
