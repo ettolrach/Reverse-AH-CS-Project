@@ -6,7 +6,6 @@ pygame.init()
 windowTitle = "Reverse!"
 stopGame = False
 backgroundColour = ( 96,191, 77)
-whiteToPlay = False
 RESOLUTION = [640,720]
 SQUARE_SIZE = 80
 BOARD_SIZE = 8
@@ -14,6 +13,7 @@ TOP_OFFSET = 40
 RIGHT_OFFSET = 1
 DIRECTIONS = [(0,-1), (1,-1), (1,0), (1,1), (0,1), (-1,1), (-1, 0), (-1,-1)]
 
+whiteToPlay = False
 pygame.display.set_mode(RESOLUTION)
 pygame.display.set_caption(windowTitle)
 clock = pygame.time.Clock()
