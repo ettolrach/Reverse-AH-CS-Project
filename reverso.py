@@ -63,7 +63,7 @@ def get_discs_to_flip(boardList, x, y, changeX, changeY, whiteToPlay):
     # This list will keep track of all the indicies of discs that should be flipped.
     listToFlip = []
     # Check whether the sqaure that was clicked is empty. If it isn't, then it's an illegal move.
-    if (boardList[x + BOARD_SIZE*y] != None):
+    if boardList[x + BOARD_SIZE*y] != None:
         return listToFlip
 
     while True:
@@ -73,7 +73,7 @@ def get_discs_to_flip(boardList, x, y, changeX, changeY, whiteToPlay):
 
         # Note that it's okay to use multiple 'if's here since all except the last return values.
         # If x and y are out of bounds, then no discs should be flipped.
-        if (y < 0 or x < 0 or y > 7 or x > 7):
+        if y < 0 or x < 0 or y > 7 or x > 7:
             return []
         # If the run ends in an empty square, then no discs should be flipped.
         if boardList[x + BOARD_SIZE*y] == None:
