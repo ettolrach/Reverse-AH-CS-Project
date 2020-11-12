@@ -6,7 +6,6 @@ pygame.init()
 windowTitle = "Reverse!"
 stopGame = False
 backgroundColour = ( 96,191, 77)
-black = (  0,  0,  0)
 whiteToPlay = False
 RESOLUTION = [640,720]
 SQUARE_SIZE = 80
@@ -20,7 +19,7 @@ pygame.display.set_caption(windowTitle)
 clock = pygame.time.Clock()
 pygame.mouse.set_visible(True)
 background = pygame.image.load(os.path.join("sprites", "gameBoard.png")).convert()
-pygame.display.get_surface().blit(background, (0,0))
+whoseMoveFont = pygame.font.SysFont("TW Cen MT", 16)
 
 def set_up_board(screen):
     newGroup = pygame.sprite.Group()
@@ -64,6 +63,12 @@ def make_move(boardList, x, y, whiteToPlay):
 
     return totalFlip
 
+def are_legal_moves_available(boardList, x, y, whiteToPlay):
+    for y in range(BOARD_SIZE):
+        for x in range(BOARD_SIZE):
+            if make_move(boardList, x, y, whiteToPlay) != []:
+                return True
+
 def place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay):
     boardList[x + BOARD_SIZE*y] = classes.Disc(whiteToPlay, RIGHT_OFFSET + x * SQUARE_SIZE, TOP_OFFSET + y * SQUARE_SIZE)
     boardSpriteGroup.add(boardList[x + BOARD_SIZE*y])
@@ -71,13 +76,17 @@ def place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay):
 
     return boardList, boardSpriteGroup, whiteToPlay
 
-def are_legal_moves_available(boardList, x, y, whiteToPlay):
-    for y in range(BOARD_SIZE):
-        for x in range(BOARD_SIZE):
-            if make_move(boardList, x, y, whiteToPlay) != []:
-                return True
+def draw_everything(boardSpriteGroup, whoseMoveFont, whiteToPlay):
+    pygame.display.get_surface().blit(background, (0,0))
+    boardSpriteGroup.draw(pygame.display.get_surface())
+    if whiteToPlay == True:
+        fontImage = whoseMoveFont.render("White To Play", True, "black").convert_alpha()
+    else:
+        fontImage = whoseMoveFont.render("Black To Play", True, "black").convert_alpha()
+    pygame.display.get_surface().blit(fontImage, (320 - fontImage.get_width() / 2, 700 - fontImage.get_height() / 2))
 
 boardList, boardSpriteGroup = set_up_board(pygame.display.get_surface())
+draw_everything(boardSpriteGroup, whoseMoveFont, whiteToPlay)
 pygame.display.update()
 
 # Main game loop.
@@ -109,7 +118,7 @@ while stopGame == False:
                 xLetter = chr(97+x)
                 print(xLetter + str(y+1))
             
-            boardSpriteGroup.draw(pygame.display.get_surface())
+            draw_everything(boardSpriteGroup, whoseMoveFont, whiteToPlay)
 
     pygame.display.update()
     clock.tick(20)
