@@ -21,8 +21,10 @@ pygame.mouse.set_visible(True)
 background = pygame.image.load(os.path.join("sprites", "gameBoard.png")).convert()
 largeFont = pygame.font.SysFont("TW Cen MT", 36)
 smallFont = pygame.font.SysFont("TW Cen MT", 20)
+black_counter = 0
+white_counter = 0
 
-def set_up_board(screen):
+def set_up_board(screen, white_counter, black_counter):
     newGroup = pygame.sprite.Group()
     newBoard = [None for i in range(BOARD_SIZE**2)]
     # Use i = x + wy where i is the desired index in the 1D list, x and y are coordinates, and w is the width.
@@ -33,8 +35,21 @@ def set_up_board(screen):
     newBoard[4 + BOARD_SIZE*4] = classes.Disc(True, RIGHT_OFFSET + 4 * SQUARE_SIZE, TOP_OFFSET + 4 * SQUARE_SIZE)
     newGroup.add(newBoard[3 + BOARD_SIZE*3], newBoard[4 + BOARD_SIZE*3], newBoard[3 + BOARD_SIZE*4], newBoard[4 + BOARD_SIZE*4])
     newGroup.draw(screen)
+    black_counter = 2
+    white_counter = 2
 
-    return newBoard, newGroup
+    return newBoard, newGroup, white_counter, black_counter
+
+def change_colour_of_disc(boardList, index, white_counter, black_counter):
+    if boardList[index].isWhite == True:
+        black_counter += 1
+        white_counter -= 1
+        boardList[index].change_colour()
+    else:
+        black_counter -= 1
+        white_counter += 1
+        boardList[index].change_colour()
+    return boardList, white_counter, black_counter
 
 def get_discs_to_flip(boardList, x, y, changeX, changeY, whiteToPlay):
     listToFlip = []
@@ -70,16 +85,23 @@ def are_legal_moves_available(boardList, x, y, whiteToPlay):
             if make_move(boardList, x, y, whiteToPlay) != []:
                 return True
 
-def place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay):
+def place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay, white_counter, black_counter):
     boardList[x + BOARD_SIZE*y] = classes.Disc(whiteToPlay, RIGHT_OFFSET + x * SQUARE_SIZE, TOP_OFFSET + y * SQUARE_SIZE)
     boardSpriteGroup.add(boardList[x + BOARD_SIZE*y])
+    if whiteToPlay == True:
+        white_counter += 1
+    else:
+        black_counter += 1
     whiteToPlay = not whiteToPlay
 
-    return boardList, boardSpriteGroup, whiteToPlay
+    return boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter
 
-def draw_everything(boardSpriteGroup, largeFont, whiteToPlay):
+def draw_everything(boardSpriteGroup, largeFont, whiteToPlay, white_counter, black_counter):
+    # Draw the discs.
     pygame.display.get_surface().blit(background, (0,0))
     boardSpriteGroup.draw(pygame.display.get_surface())
+
+    # Draw the "[COLOUR] To Play" text.
     if whiteToPlay == True:
         whoseMoveImage = largeFont.render("White To Play", True, "black").convert_alpha()
         pygame.display.get_surface().blit(whoseMoveImage, (480 - whoseMoveImage.get_width() / 2, 20 - whoseMoveImage.get_height() / 2))
@@ -87,8 +109,14 @@ def draw_everything(boardSpriteGroup, largeFont, whiteToPlay):
         whoseMoveImage = largeFont.render("Black To Play", True, "white").convert_alpha()
         pygame.display.get_surface().blit(whoseMoveImage, (160 - whoseMoveImage.get_width() / 2, 20 - whoseMoveImage.get_height() / 2))
 
-boardList, boardSpriteGroup = set_up_board(pygame.display.get_surface())
-draw_everything(boardSpriteGroup, largeFont, whiteToPlay)
+    # Draw the disc counters.
+    whiteCounter = largeFont.render(str(white_counter), True, "black").convert_alpha()
+    blackCounter = largeFont.render(str(black_counter), True, "white").convert_alpha()
+    pygame.display.get_surface().blit(whiteCounter, (480 - whiteCounter.get_width() / 2, 700 - whiteCounter.get_height() / 2))
+    pygame.display.get_surface().blit(blackCounter, (160 - blackCounter.get_width() / 2, 700 - blackCounter.get_height() / 2))
+
+boardList, boardSpriteGroup, white_counter, black_counter = set_up_board(pygame.display.get_surface(), white_counter, black_counter)
+draw_everything(boardSpriteGroup, largeFont, whiteToPlay, white_counter, black_counter)
 pygame.display.update()
 
 # Main game loop.
@@ -107,20 +135,20 @@ while stopGame == False:
                 if totalFlip != []:
                     # then flip the discs at the coordinates in the list 'totalFlip'.
                     for index in totalFlip:
-                        boardList[index].change_colour()
+                        boardList, white_counter, black_counter = change_colour_of_disc(boardList, index, white_counter, black_counter)
 
                     # Place the disc at the clicked coordinate and update appropriate variables.
-                    boardList, boardSpriteGroup, whiteToPlay = place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay)
+                    boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter = place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay, white_counter, black_counter)
                     # Log the move for debugging purposes.
                     xLetter = chr(97+x)
                     print(xLetter + str(y+1))
             else:
-                boardList, boardSpriteGroup, whiteToPlay = place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay)
+                boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter = place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay, white_counter, black_counter)
                 # Log the move for debugging purposes.
                 xLetter = chr(97+x)
                 print(xLetter + str(y+1))
             
-            draw_everything(boardSpriteGroup, largeFont, whiteToPlay)
+            draw_everything(boardSpriteGroup, largeFont, whiteToPlay, white_counter, black_counter)
 
     pygame.display.update()
     clock.tick(20)
