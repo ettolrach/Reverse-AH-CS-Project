@@ -19,7 +19,8 @@ pygame.display.set_caption(windowTitle)
 clock = pygame.time.Clock()
 pygame.mouse.set_visible(True)
 background = pygame.image.load(os.path.join("sprites", "gameBoard.png")).convert()
-whoseMoveFont = pygame.font.SysFont("TW Cen MT", 16)
+largeFont = pygame.font.SysFont("TW Cen MT", 36)
+smallFont = pygame.font.SysFont("TW Cen MT", 20)
 
 def set_up_board(screen):
     newGroup = pygame.sprite.Group()
@@ -76,17 +77,18 @@ def place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay):
 
     return boardList, boardSpriteGroup, whiteToPlay
 
-def draw_everything(boardSpriteGroup, whoseMoveFont, whiteToPlay):
+def draw_everything(boardSpriteGroup, largeFont, whiteToPlay):
     pygame.display.get_surface().blit(background, (0,0))
     boardSpriteGroup.draw(pygame.display.get_surface())
     if whiteToPlay == True:
-        fontImage = whoseMoveFont.render("White To Play", True, "black").convert_alpha()
+        whoseMoveImage = largeFont.render("White To Play", True, "black").convert_alpha()
+        pygame.display.get_surface().blit(whoseMoveImage, (480 - whoseMoveImage.get_width() / 2, 20 - whoseMoveImage.get_height() / 2))
     else:
-        fontImage = whoseMoveFont.render("Black To Play", True, "black").convert_alpha()
-    pygame.display.get_surface().blit(fontImage, (320 - fontImage.get_width() / 2, 700 - fontImage.get_height() / 2))
+        whoseMoveImage = largeFont.render("Black To Play", True, "white").convert_alpha()
+        pygame.display.get_surface().blit(whoseMoveImage, (160 - whoseMoveImage.get_width() / 2, 20 - whoseMoveImage.get_height() / 2))
 
 boardList, boardSpriteGroup = set_up_board(pygame.display.get_surface())
-draw_everything(boardSpriteGroup, whoseMoveFont, whiteToPlay)
+draw_everything(boardSpriteGroup, largeFont, whiteToPlay)
 pygame.display.update()
 
 # Main game loop.
@@ -118,7 +120,7 @@ while stopGame == False:
                 xLetter = chr(97+x)
                 print(xLetter + str(y+1))
             
-            draw_everything(boardSpriteGroup, whoseMoveFont, whiteToPlay)
+            draw_everything(boardSpriteGroup, largeFont, whiteToPlay)
 
     pygame.display.update()
     clock.tick(20)
