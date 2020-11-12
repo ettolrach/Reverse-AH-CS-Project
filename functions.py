@@ -99,22 +99,19 @@ def place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay, white_counter, bl
     else:
         black_counter += 1
 
-    # Change whose turn it is.
-    whiteToPlay = not whiteToPlay
+    return boardList, boardSpriteGroup, white_counter, black_counter
 
-    return boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter
-
-def draw_everything(boardSpriteGroup, largeFont, whiteToPlay, white_counter, black_counter):
+def draw_everything(boardSpriteGroup, largeFont, whiteToPlay, white_counter, black_counter, message = " To Play"):
     # Draw the discs.
     pygame.display.get_surface().blit(constants.BACKGROUND, (0,0))
     boardSpriteGroup.draw(pygame.display.get_surface())
 
     # Draw the "[COLOUR] To Play" text.
     if whiteToPlay == True:
-        whoseMoveImage = largeFont.render("White To Play", True, "black").convert_alpha()
+        whoseMoveImage = largeFont.render("White" + message, True, "black").convert_alpha()
         pygame.display.get_surface().blit(whoseMoveImage, (480 - whoseMoveImage.get_width() / 2, 20 - whoseMoveImage.get_height() / 2))
     else:
-        whoseMoveImage = largeFont.render("Black To Play", True, "white").convert_alpha()
+        whoseMoveImage = largeFont.render("Black" + message, True, "white").convert_alpha()
         pygame.display.get_surface().blit(whoseMoveImage, (160 - whoseMoveImage.get_width() / 2, 20 - whoseMoveImage.get_height() / 2))
 
     # Draw the disc counters.
