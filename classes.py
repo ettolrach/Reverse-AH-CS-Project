@@ -1,7 +1,7 @@
 import pygame, os
 
 class Disc(pygame.sprite.Sprite):
-    def __init__(self, isWhiteInitially, xPos, yPos, pathToImage = None):
+    def __init__(self, isWhiteInitially, xPos, yPos):
         pygame.sprite.Sprite.__init__(self)
         self.isWhite = isWhiteInitially
         self.image = pygame.Surface([78,78])
