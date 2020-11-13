@@ -35,7 +35,7 @@ def change_colour_of_disc(boardList, index, white_counter, black_counter):
 
     return boardList, white_counter, black_counter
 
-def get_discs_to_flip(boardList, x, y, changeX, changeY, whiteToPlay):
+def get_discs_to_flip_in_one_direction(boardList, x, y, changeX, changeY, whiteToPlay):
     # This list will keep track of all the indicies of discs that should be flipped.
     listToFlip = []
     # Check whether the sqaure that was clicked is empty. If it isn't, then it's an illegal move.
@@ -62,14 +62,14 @@ def get_discs_to_flip(boardList, x, y, changeX, changeY, whiteToPlay):
 
     return listToFlip
 
-def make_move(boardList, x, y, whiteToPlay):
+def get_all_discs_to_flip(boardList, x, y, whiteToPlay):
     # Keep track of all the discs that should be flipped.
     totalFlip = []
     # Check for discs to flip in all of the constants.DIRECTIONS using tuplets defined as a constant at the global level.
     # These are referred to as vectors.
     for direction in constants.DIRECTIONS:
         # Run an algorithm which finds discs to flip in a specified direction.
-        toFlip = get_discs_to_flip(boardList, x, y, direction[0], direction[1], whiteToPlay)
+        toFlip = get_discs_to_flip_in_one_direction(boardList, x, y, direction[0], direction[1], whiteToPlay)
         # If there are no discs to be flipped, check the next direction.
         if (toFlip == []):
             continue
@@ -84,7 +84,7 @@ def are_legal_moves_available(boardList, x, y, whiteToPlay):
         for x in range(constants.BOARD_SIZE):
             # Use the make_move function to check if there is a move available.
             # If at any point there is a move available, then there are indeed legal moves available.
-            if make_move(boardList, x, y, whiteToPlay) != []:
+            if get_all_discs_to_flip(boardList, x, y, whiteToPlay) != []:
                 return True
     return False
 
@@ -127,3 +127,43 @@ def draw_everything(boardSpriteGroup, largeFont, whiteToPlay, white_counter, bla
 def draw_text_centred(fontToUse, text, colour, xCentre = 0, yCentre = 0):
     fontImage = fontToUse.render(text, True, colour).convert_alpha()
     pygame.display.get_surface().blit(fontImage, (xCentre - fontImage.get_width() / 2, yCentre - fontImage.get_height() / 2))
+
+def make_move(boardList, boardSpriteGroup, fontToUse, x, y, whiteToPlay, white_counter, black_counter):
+    totalFlip = []
+
+    # Make a move.
+    totalFlip = get_all_discs_to_flip(boardList, x, y, whiteToPlay)
+    # If the move was legal,
+    if totalFlip != []:
+        # flip the discs at the coordinates in the list 'totalFlip'.
+        for index in totalFlip:
+            boardList, white_counter, black_counter = change_colour_of_disc(boardList, index, white_counter, black_counter)
+
+        # and place the disc at the clicked coordinate and update appropriate variables.
+        boardList, boardSpriteGroup, white_counter, black_counter = place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay, white_counter, black_counter)
+        # Log the move for debugging purposes.
+        xLetter = chr(97+x)
+        print(xLetter + str(y+1), end = " ")
+
+        if white_counter + black_counter == 64:
+            if white_counter > black_counter:
+                draw_everything(boardSpriteGroup, fontToUse, True, white_counter, black_counter, True)
+            elif black_counter > white_counter:
+                draw_everything(boardSpriteGroup, fontToUse, False, white_counter, black_counter, True)
+            else:
+                draw_text_centred(fontToUse, "It is a draw.", "black", 480, 20)
+                draw_text_centred(fontToUse, "Click anywhere to quit.", "white", 160, 20)
+            gameOver = True
+            return boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter
+
+        whiteToPlay = not whiteToPlay
+        # Check if now there are legal moves and the board hasn't filled up.
+        if are_legal_moves_available(boardList, x, y, whiteToPlay) != True:
+            whiteToPlay = not whiteToPlay
+            if are_legal_moves_available(boardList, x, y, whiteToPlay) != True:
+                draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, white_counter, black_counter, True)
+                gameOver = True
+                return boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter
+
+    draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, white_counter, black_counter)
+    return boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter
