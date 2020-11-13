@@ -37,7 +37,7 @@ while stopGame == False:
                 x = int((pygame.mouse.get_pos()[0] - constants.RIGHT_OFFSET) / constants.SQUARE_SIZE)
                 y = int((pygame.mouse.get_pos()[1] - constants.TOP_OFFSET) / constants.SQUARE_SIZE)
                 
-                boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter = functions.make_move(boardList, boardSpriteGroup, largeFont, x, y, whiteToPlay, white_counter, black_counter)
+                boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter, gameOver = functions.make_move(boardList, boardSpriteGroup, largeFont, x, y, whiteToPlay, white_counter, black_counter)
 
     pygame.display.update()
     clock.tick(20)

@@ -101,7 +101,7 @@ def place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay, white_counter, bl
 
     return boardList, boardSpriteGroup, white_counter, black_counter
 
-def draw_everything(boardSpriteGroup, largeFont, whiteToPlay, white_counter, black_counter, colourWins = False):
+def draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, white_counter, black_counter, colourWins = False, draw = False):
     # Draw the discs.
     pygame.display.get_surface().blit(constants.BACKGROUND, (0,0))
     boardSpriteGroup.draw(pygame.display.get_surface())
@@ -109,20 +109,23 @@ def draw_everything(boardSpriteGroup, largeFont, whiteToPlay, white_counter, bla
     # Draw the appropriate text.
     if colourWins == True:
         if whiteToPlay == True:
-            draw_text_centred(largeFont, "White Wins!", "black", 480, 20)
-            draw_text_centred(largeFont, "Click anywhere to quit.", "white", 160, 20)
+            draw_text_centred(fontToUse, "White Wins!", "black", 480, 20)
+            draw_text_centred(fontToUse, "Click anywhere to quit.", "white", 160, 20)
         else:
-            draw_text_centred(largeFont, "Black Wins!", "white", 160, 20)
-            draw_text_centred(largeFont, "Click anywhere to quit.", "black", 480, 20)
+            draw_text_centred(fontToUse, "Black Wins!", "white", 160, 20)
+            draw_text_centred(fontToUse, "Click anywhere to quit.", "black", 480, 20)
+    elif draw == True:
+        draw_text_centred(fontToUse, "It is a draw.", "white", 160, 20)
+        draw_text_centred(fontToUse, "Click anywhere to quit.", "black", 480, 20)
     else:
         if whiteToPlay == True:
-            draw_text_centred(largeFont, "White To Play", "black", 480, 20)
+            draw_text_centred(fontToUse, "White To Play", "black", 480, 20)
         else:
-            draw_text_centred(largeFont, "Black To Play", "white", 160, 20)
+            draw_text_centred(fontToUse, "Black To Play", "white", 160, 20)
 
     # Draw the disc counters.
-    draw_text_centred(largeFont, str(black_counter), "white", 160, 700)
-    draw_text_centred(largeFont, str(white_counter), "black", 480, 700)
+    draw_text_centred(fontToUse, str(black_counter), "white", 160, 700)
+    draw_text_centred(fontToUse, str(white_counter), "black", 480, 700)
 
 def draw_text_centred(fontToUse, text, colour, xCentre = 0, yCentre = 0):
     fontImage = fontToUse.render(text, True, colour).convert_alpha()
@@ -130,6 +133,7 @@ def draw_text_centred(fontToUse, text, colour, xCentre = 0, yCentre = 0):
 
 def make_move(boardList, boardSpriteGroup, fontToUse, x, y, whiteToPlay, white_counter, black_counter):
     totalFlip = []
+    gameOver = False
 
     # Make a move.
     totalFlip = get_all_discs_to_flip(boardList, x, y, whiteToPlay)
@@ -151,10 +155,9 @@ def make_move(boardList, boardSpriteGroup, fontToUse, x, y, whiteToPlay, white_c
             elif black_counter > white_counter:
                 draw_everything(boardSpriteGroup, fontToUse, False, white_counter, black_counter, True)
             else:
-                draw_text_centred(fontToUse, "It is a draw.", "black", 480, 20)
-                draw_text_centred(fontToUse, "Click anywhere to quit.", "white", 160, 20)
+                draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, white_counter, black_counter, False, True)
             gameOver = True
-            return boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter
+            return boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter, gameOver
 
         whiteToPlay = not whiteToPlay
         # Check if now there are legal moves and the board hasn't filled up.
@@ -163,7 +166,7 @@ def make_move(boardList, boardSpriteGroup, fontToUse, x, y, whiteToPlay, white_c
             if are_legal_moves_available(boardList, x, y, whiteToPlay) != True:
                 draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, white_counter, black_counter, True)
                 gameOver = True
-                return boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter
+                return boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter, gameOver
 
     draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, white_counter, black_counter)
-    return boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter
+    return boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter, gameOver
