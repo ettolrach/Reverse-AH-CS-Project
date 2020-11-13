@@ -101,21 +101,29 @@ def place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay, white_counter, bl
 
     return boardList, boardSpriteGroup, white_counter, black_counter
 
-def draw_everything(boardSpriteGroup, largeFont, whiteToPlay, white_counter, black_counter, message = " To Play"):
+def draw_everything(boardSpriteGroup, largeFont, whiteToPlay, white_counter, black_counter, colourWins = False):
     # Draw the discs.
     pygame.display.get_surface().blit(constants.BACKGROUND, (0,0))
     boardSpriteGroup.draw(pygame.display.get_surface())
 
-    # Draw the "[COLOUR] To Play" text.
-    if whiteToPlay == True:
-        whoseMoveImage = largeFont.render("White" + message, True, "black").convert_alpha()
-        pygame.display.get_surface().blit(whoseMoveImage, (480 - whoseMoveImage.get_width() / 2, 20 - whoseMoveImage.get_height() / 2))
+    # Draw the appropriate text.
+    if colourWins == True:
+        if whiteToPlay == True:
+            draw_text_centred(largeFont, "White Wins!", "black", 480, 20)
+            draw_text_centred(largeFont, "Click anywhere to quit.", "white", 160, 20)
+        else:
+            draw_text_centred(largeFont, "Black Wins!", "white", 160, 20)
+            draw_text_centred(largeFont, "Click anywhere to quit.", "black", 480, 20)
     else:
-        whoseMoveImage = largeFont.render("Black" + message, True, "white").convert_alpha()
-        pygame.display.get_surface().blit(whoseMoveImage, (160 - whoseMoveImage.get_width() / 2, 20 - whoseMoveImage.get_height() / 2))
+        if whiteToPlay == True:
+            draw_text_centred(largeFont, "White To Play", "black", 480, 20)
+        else:
+            draw_text_centred(largeFont, "Black To Play", "white", 160, 20)
 
     # Draw the disc counters.
-    whiteCounter = largeFont.render(str(white_counter), True, "black").convert_alpha()
-    blackCounter = largeFont.render(str(black_counter), True, "white").convert_alpha()
-    pygame.display.get_surface().blit(whiteCounter, (480 - whiteCounter.get_width() / 2, 700 - whiteCounter.get_height() / 2))
-    pygame.display.get_surface().blit(blackCounter, (160 - blackCounter.get_width() / 2, 700 - blackCounter.get_height() / 2))
+    draw_text_centred(largeFont, str(black_counter), "white", 160, 700)
+    draw_text_centred(largeFont, str(white_counter), "black", 480, 700)
+
+def draw_text_centred(fontToUse, text, colour, xCentre = 0, yCentre = 0):
+    fontImage = fontToUse.render(text, True, colour).convert_alpha()
+    pygame.display.get_surface().blit(fontImage, (xCentre - fontImage.get_width() / 2, yCentre - fontImage.get_height() / 2))
