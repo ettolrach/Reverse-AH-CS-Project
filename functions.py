@@ -1,6 +1,6 @@
 import pygame, classes, constants
 
-def set_up_board(screen, white_counter, black_counter):
+def set_up_board(screen, whiteCounter, blackCounter):
     # Create a new sprite group to work with the graphics of PyGame easier.
     newGroup = pygame.sprite.Group()
     # Create a 1D list of a 2D grid.
@@ -15,25 +15,25 @@ def set_up_board(screen, white_counter, black_counter):
     newBoard[4 + constants.BOARD_SIZE*4] = classes.Disc(True, constants.RIGHT_OFFSET + 4 * constants.SQUARE_SIZE, constants.TOP_OFFSET + 4 * constants.SQUARE_SIZE)
     newGroup.add(newBoard[3 + constants.BOARD_SIZE*3], newBoard[4 + constants.BOARD_SIZE*3], newBoard[3 + constants.BOARD_SIZE*4], newBoard[4 + constants.BOARD_SIZE*4])
     # Set up the counters to match.
-    black_counter = 2
-    white_counter = 2
+    blackCounter = 2
+    whiteCounter = 2
 
     newGroup.draw(screen)
 
-    return newBoard, newGroup, white_counter, black_counter
+    return newBoard, newGroup, whiteCounter, blackCounter
 
-def change_colour_of_disc(boardList, index, white_counter, black_counter):
+def change_colour_of_disc(boardList, index, whiteCounter, blackCounter):
     # Update the counters.
     if boardList[index].isWhite == True:
-        black_counter += 1
-        white_counter -= 1
+        blackCounter += 1
+        whiteCounter -= 1
     else:
-        black_counter -= 1
-        white_counter += 1
+        blackCounter -= 1
+        whiteCounter += 1
     # Change the colour and return the modified list of discs.    
     boardList[index].change_colour()
 
-    return boardList, white_counter, black_counter
+    return boardList, whiteCounter, blackCounter
 
 def get_discs_to_flip_in_one_direction(boardList, x, y, changeX, changeY, whiteToPlay):
     # This list will keep track of all the indicies of discs that should be flipped.
@@ -88,20 +88,20 @@ def are_legal_moves_available(boardList, x, y, whiteToPlay):
                 return True
     return False
 
-def place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay, white_counter, black_counter):
+def place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter):
     # Update the list of discs and sprite group.
     boardList[x + constants.BOARD_SIZE*y] = classes.Disc(whiteToPlay, constants.RIGHT_OFFSET + x * constants.SQUARE_SIZE, constants.TOP_OFFSET + y * constants.SQUARE_SIZE)
     boardSpriteGroup.add(boardList[x + constants.BOARD_SIZE*y])
 
     # Update the counter.
     if whiteToPlay == True:
-        white_counter += 1
+        whiteCounter += 1
     else:
-        black_counter += 1
+        blackCounter += 1
 
-    return boardList, boardSpriteGroup, white_counter, black_counter
+    return boardList, boardSpriteGroup, whiteCounter, blackCounter
 
-def draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, white_counter, black_counter, colourWins = False, draw = False):
+def draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter, colourWins = False, draw = False):
     # Draw the discs.
     pygame.display.get_surface().blit(constants.BACKGROUND, (0,0))
     boardSpriteGroup.draw(pygame.display.get_surface())
@@ -124,14 +124,14 @@ def draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, white_counter, bla
             draw_text_centred(fontToUse, "Black To Play", "white", 160, 20)
 
     # Draw the disc counters.
-    draw_text_centred(fontToUse, str(black_counter), "white", 160, 700)
-    draw_text_centred(fontToUse, str(white_counter), "black", 480, 700)
+    draw_text_centred(fontToUse, str(blackCounter), "white", 160, 700)
+    draw_text_centred(fontToUse, str(whiteCounter), "black", 480, 700)
 
 def draw_text_centred(fontToUse, text, colour, xCentre = 0, yCentre = 0):
     fontImage = fontToUse.render(text, True, colour).convert_alpha()
     pygame.display.get_surface().blit(fontImage, (xCentre - fontImage.get_width() / 2, yCentre - fontImage.get_height() / 2))
 
-def make_move(boardList, boardSpriteGroup, fontToUse, x, y, whiteToPlay, white_counter, black_counter):
+def make_move(boardList, boardSpriteGroup, fontToUse, x, y, whiteToPlay, whiteCounter, blackCounter):
     totalFlip = []
     gameOver = False
 
@@ -141,32 +141,32 @@ def make_move(boardList, boardSpriteGroup, fontToUse, x, y, whiteToPlay, white_c
     if totalFlip != []:
         # flip the discs at the coordinates in the list 'totalFlip'.
         for index in totalFlip:
-            boardList, white_counter, black_counter = change_colour_of_disc(boardList, index, white_counter, black_counter)
+            boardList, whiteCounter, blackCounter = change_colour_of_disc(boardList, index, whiteCounter, blackCounter)
 
         # and place the disc at the clicked coordinate and update appropriate variables.
-        boardList, boardSpriteGroup, white_counter, black_counter = place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay, white_counter, black_counter)
+        boardList, boardSpriteGroup, whiteCounter, blackCounter = place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter)
         # Log the move for debugging purposes.
         xLetter = chr(97+x)
         print(xLetter + str(y+1), end = " ")
 
-        if white_counter + black_counter == 64:
-            if white_counter > black_counter:
-                draw_everything(boardSpriteGroup, fontToUse, True, white_counter, black_counter, True)
-            elif black_counter > white_counter:
-                draw_everything(boardSpriteGroup, fontToUse, False, white_counter, black_counter, True)
+        if whiteCounter + blackCounter == 64:
+            if whiteCounter > blackCounter:
+                draw_everything(boardSpriteGroup, fontToUse, True, whiteCounter, blackCounter, True)
+            elif blackCounter > whiteCounter:
+                draw_everything(boardSpriteGroup, fontToUse, False, whiteCounter, blackCounter, True)
             else:
-                draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, white_counter, black_counter, False, True)
+                draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter, False, True)
             gameOver = True
-            return boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter, gameOver
+            return boardList, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter, gameOver
 
         whiteToPlay = not whiteToPlay
         # Check if now there are legal moves and the board hasn't filled up.
         if are_legal_moves_available(boardList, x, y, whiteToPlay) != True:
             whiteToPlay = not whiteToPlay
             if are_legal_moves_available(boardList, x, y, whiteToPlay) != True:
-                draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, white_counter, black_counter, True)
+                draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter, True)
                 gameOver = True
-                return boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter, gameOver
+                return boardList, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter, gameOver
 
-    draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, white_counter, black_counter)
-    return boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter, gameOver
+    draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter)
+    return boardList, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter, gameOver

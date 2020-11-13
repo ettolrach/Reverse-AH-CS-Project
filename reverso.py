@@ -15,13 +15,13 @@ clock = pygame.time.Clock()
 pygame.mouse.set_visible(True)
 largeFont = pygame.font.SysFont("TW Cen MT", 36)
 smallFont = pygame.font.SysFont("TW Cen MT", 20)
-black_counter = 0
-white_counter = 0
+blackCounter = 0
+whiteCounter = 0
 gameOver = False
 
 # Initialise the board.
-boardList, boardSpriteGroup, white_counter, black_counter = functions.set_up_board(pygame.display.get_surface(), white_counter, black_counter)
-functions.draw_everything(boardSpriteGroup, largeFont, whiteToPlay, white_counter, black_counter)
+boardList, boardSpriteGroup, whiteCounter, blackCounter = functions.set_up_board(pygame.display.get_surface(), whiteCounter, blackCounter)
+functions.draw_everything(boardSpriteGroup, largeFont, whiteToPlay, whiteCounter, blackCounter)
 pygame.display.update()
 
 
@@ -34,7 +34,7 @@ for move in moves:
     x = int(ord(move[0]) - 97)
     y = int(move[1])-1
     
-    boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter = functions.make_move(boardList, boardSpriteGroup, largeFont, x, y, whiteToPlay, white_counter, black_counter)
+    boardList, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter = functions.make_move(boardList, boardSpriteGroup, largeFont, x, y, whiteToPlay, whiteCounter, blackCounter)
 """
 
 # Main game loop.
@@ -50,7 +50,7 @@ while stopGame == False:
                 x = int((pygame.mouse.get_pos()[0] - constants.RIGHT_OFFSET) / constants.SQUARE_SIZE)
                 y = int((pygame.mouse.get_pos()[1] - constants.TOP_OFFSET) / constants.SQUARE_SIZE)
                 
-                boardList, boardSpriteGroup, whiteToPlay, white_counter, black_counter, gameOver = functions.make_move(boardList, boardSpriteGroup, largeFont, x, y, whiteToPlay, white_counter, black_counter)
+                boardList, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter, gameOver = functions.make_move(boardList, boardSpriteGroup, largeFont, x, y, whiteToPlay, whiteCounter, blackCounter)
 
     pygame.display.update()
     clock.tick(20)
