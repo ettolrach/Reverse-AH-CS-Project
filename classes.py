@@ -13,6 +13,7 @@ class Disc(pygame.sprite.Sprite):
             self.image = pygame.image.load(os.path.join("sprites", "whiteDisc.png")).convert_alpha()
         else:
             self.image = pygame.image.load(os.path.join("sprites", "blackDisc.png")).convert_alpha()
+        self.image = pygame.transform.smoothscale(self.image, (78,78))
     
     def change_colour(self):
         if self.isWhite == True:
@@ -21,3 +22,4 @@ class Disc(pygame.sprite.Sprite):
         else:
             self.image = pygame.image.load(os.path.join("sprites", "whiteDisc.png")).convert_alpha()
             self.isWhite = True
+        self.image = pygame.transform.smoothscale(self.image, (78,78))
