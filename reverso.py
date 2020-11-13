@@ -50,7 +50,7 @@ while stopGame == False:
                     boardList, boardSpriteGroup, white_counter, black_counter = functions.place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay, white_counter, black_counter)
                     # Log the move for debugging purposes.
                     xLetter = chr(97+x)
-                    print(xLetter + str(y+1))
+                    print(xLetter + str(y+1), end = " ")
 
                     if white_counter + black_counter == 64:
                         if white_counter > black_counter:
