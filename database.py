@@ -17,30 +17,18 @@ def prepare_database():
     return databaseConnection
 
 def create_highscore_table(connection):
-    try:
-        cursor = connection.cursor()
-        # Create a high scores table with the attributes:
-        # - "name" type text, primary key,
-        # - "discs" type integrer.
-        cursor.execute("CREATE TABLE IF NOT EXISTS highscores (name text PRIMARY KEY, discs integer NOT NULL);")
-        connection.commit()
-    except sqlite3.Error as e:
-        print(e)
+    execute_sql(connection, "CREATE TABLE IF NOT EXISTS highscores (name text PRIMARY KEY, discs integer NOT NULL);")
 
 def add_new_highscore(connection, name, discs):
-    valuesToInsert = (name, discs)
-    try:
-        cursor = connection.cursor()
-        cursor.execute("INSERT INTO highscores VALUES (?, ?)", valuesToInsert)
-        connection.commit()
-    except sqlite3.Error as e:
-        print(e)
+    execute_sql(connection, "INSERT INTO highscores VALUES (?, ?)", (name, discs))
 
 def update_highscore(connection, name, discs):
-    valuesToUpdate = (name, discs)
+    execute_sql(connection, "UPDATE highscores SET name = ? , discs = ? ;", (name, discs))
+
+def execute_sql(connection, sql, placeholderValues = None):
     try:
         cursor = connection.cursor()
-        cursor.execute("UPDATE highscores SET name = ? , discs = ? ;", valuesToUpdate)
+        cursor.execute(sql, placeholderValues) if placeholderValues is not None else cursor.execute(sql)
         connection.commit()
     except sqlite3.Error as e:
         print(e)
