@@ -23,5 +23,6 @@ def create_highscore_table(connection):
         # - "name" type text, primary key,
         # - "discs" type integrer.
         cursor.execute("CREATE TABLE IF NOT EXISTS highscores (name text PRIMARY KEY, discs integer NOT NULL);")
+        connection.commit()
     except sqlite3.Error as e:
         print(e)
