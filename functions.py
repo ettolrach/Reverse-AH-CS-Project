@@ -170,3 +170,11 @@ def make_move(boardList, boardSpriteGroup, fontToUse, x, y, whiteToPlay, whiteCo
 
     draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter)
     return boardList, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter, gameOver
+
+def insertion_sort(listToSort):
+    for indexToSort in range(len(listToSort)):
+        for currentIndex in range(indexToSort, 0, -1):
+            # Swap the current index and the previous.
+            listToSort[currentIndex], listToSort[currentIndex-1] = listToSort[currentIndex-1], listToSort[currentIndex]
+
+    return listToSort
