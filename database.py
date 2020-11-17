@@ -26,3 +26,13 @@ def create_highscore_table(connection):
         connection.commit()
     except sqlite3.Error as e:
         print(e)
+
+def add_new_highscore(connection, name, discs):
+    valuesToInsert = (name, discs)
+    try:
+        cursor = connection.cursor()
+        cursor.execute("INSERT INTO highscores VALUES (?, ?)", valuesToInsert)
+        connection.commit()
+    except sqlite3.Error as e:
+        print(e)
+    
