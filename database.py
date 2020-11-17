@@ -40,7 +40,7 @@ def update_highscore(connection, name, discs):
     valuesToUpdate = (name, discs)
     try:
         cursor = connection.cursor()
-        cursor.execute("UPDATE highscores SET name = ? , discs = ? ;")
+        cursor.execute("UPDATE highscores SET name = ? , discs = ? ;", valuesToUpdate)
         connection.commit()
     except sqlite3.Error as e:
         print(e)
