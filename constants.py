@@ -1,7 +1,7 @@
 import pygame, os
 
 def initialise():
-	global RESOLUTION, SQUARE_SIZE, BOARD_SIZE, TOP_OFFSET, RIGHT_OFFSET, DIRECTIONS, BACKGROUND
+	global RESOLUTION, SQUARE_SIZE, BOARD_SIZE, TOP_OFFSET, RIGHT_OFFSET, DIRECTIONS, BACKGROUND, DATABASE_PATH
 	RESOLUTION = [640,720]
 	pygame.display.set_mode(RESOLUTION)
 	BACKGROUND = pygame.image.load(os.path.join("sprites", "gameBoard.png")).convert()
@@ -10,3 +10,4 @@ def initialise():
 	TOP_OFFSET = 40
 	RIGHT_OFFSET = 1
 	DIRECTIONS = [(0,-1), (1,-1), (1,0), (1,1), (0,1), (-1,1), (-1, 0), (-1,-1)]
+	DATABASE_PATH = os.path.join("db", "database.py")
