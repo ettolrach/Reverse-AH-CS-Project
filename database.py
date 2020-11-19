@@ -27,8 +27,12 @@ def update_highscore(connection, name, discs):
 
 def execute_sql(connection, sql, placeholderValues = None):
     try:
+        # Create a cursor object which will run SQL commands.
         cursor = connection.cursor()
+        # Execute the SQL command. If "placeholderValues" is set, then the values will be inserted in the placeholders. Otherwise, plain SQl will be run.
+        # That is, where there are placeholdes (character "?") values from "placeholderValues" will be inserted.
         cursor.execute(sql, placeholderValues) if placeholderValues is not None else cursor.execute(sql)
+        # Save the changes to the database file.
         connection.commit()
     except sqlite3.Error as e:
         print(e)
