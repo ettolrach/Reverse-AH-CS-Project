@@ -13,17 +13,16 @@ pygame.display.set_mode(constants.RESOLUTION)
 pygame.display.set_caption(windowTitle)
 clock = pygame.time.Clock()
 pygame.mouse.set_visible(True)
+titleFont = pygame.font.SysFont("Georgia", 60)
 largeFont = pygame.font.SysFont("TW Cen MT", 36)
 smallFont = pygame.font.SysFont("TW Cen MT", 20)
 blackCounter = 0
 whiteCounter = 0
 gameOver = False
+currentState = "mainMenu"
 
 # Initialise the board.
-boardList, boardSpriteGroup, whiteCounter, blackCounter = functions.set_up_board(pygame.display.get_surface(), whiteCounter, blackCounter)
-functions.draw_everything(boardSpriteGroup, largeFont, whiteToPlay, whiteCounter, blackCounter)
-pygame.display.update()
-
+boardList, boardSpriteGroup, whiteCounter, blackCounter, currentState = functions.set_up_board(pygame.display.get_surface(), whiteCounter, blackCounter, largeFont)
 
 # To run certain moves for debug purposes, uncomment the following code and replace the example list.
 """

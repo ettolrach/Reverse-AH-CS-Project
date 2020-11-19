@@ -1,6 +1,6 @@
 import pygame, classes, constants
 
-def set_up_board(screen, whiteCounter, blackCounter):
+def set_up_board(screen, whiteCounter, blackCounter, fontToUse):
     # Create a new sprite group to work with the graphics of PyGame easier.
     newGroup = pygame.sprite.Group()
     # Create a 1D list of a 2D grid.
@@ -18,9 +18,11 @@ def set_up_board(screen, whiteCounter, blackCounter):
     blackCounter = 2
     whiteCounter = 2
 
-    newGroup.draw(screen)
+    currentState = "game"
 
-    return newBoard, newGroup, whiteCounter, blackCounter
+    draw_board(newGroup, fontToUse, False, whiteCounter, blackCounter)
+
+    return newBoard, newGroup, whiteCounter, blackCounter, currentState
 
 def change_colour_of_disc(boardList, index, whiteCounter, blackCounter):
     # Update the counters.
@@ -101,7 +103,7 @@ def place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay, whiteCounter, bla
 
     return boardList, boardSpriteGroup, whiteCounter, blackCounter
 
-def draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter, colourWins = False, draw = False):
+def draw_board(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter, colourWins = False, draw = False):
     # Draw the discs.
     pygame.display.get_surface().blit(constants.BACKGROUND, (0,0))
     boardSpriteGroup.draw(pygame.display.get_surface())
@@ -126,6 +128,7 @@ def draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blac
     # Draw the disc counters.
     draw_text_centred(fontToUse, str(blackCounter), "white", 160, 700)
     draw_text_centred(fontToUse, str(whiteCounter), "black", 480, 700)
+    pygame.display.update()
 
 def draw_text_centred(fontToUse, text, colour, xCentre = 0, yCentre = 0):
     fontImage = fontToUse.render(text, True, colour).convert_alpha()
@@ -151,11 +154,11 @@ def make_move(boardList, boardSpriteGroup, fontToUse, x, y, whiteToPlay, whiteCo
 
         if whiteCounter + blackCounter == 64:
             if whiteCounter > blackCounter:
-                draw_everything(boardSpriteGroup, fontToUse, True, whiteCounter, blackCounter, True)
+                draw_board(boardSpriteGroup, fontToUse, True, whiteCounter, blackCounter, True)
             elif blackCounter > whiteCounter:
-                draw_everything(boardSpriteGroup, fontToUse, False, whiteCounter, blackCounter, True)
+                draw_board(boardSpriteGroup, fontToUse, False, whiteCounter, blackCounter, True)
             else:
-                draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter, False, True)
+                draw_board(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter, False, True)
             gameOver = True
             return boardList, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter, gameOver
 
@@ -164,9 +167,9 @@ def make_move(boardList, boardSpriteGroup, fontToUse, x, y, whiteToPlay, whiteCo
         if are_legal_moves_available(boardList, x, y, whiteToPlay) != True:
             whiteToPlay = not whiteToPlay
             if are_legal_moves_available(boardList, x, y, whiteToPlay) != True:
-                draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter, True)
+                draw_board(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter, True)
                 gameOver = True
                 return boardList, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter, gameOver
 
-    draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter)
+    draw_board(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter)
     return boardList, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter, gameOver
