@@ -1,6 +1,6 @@
 import pygame, classes, constants
 
-def set_up_board(screen, whiteCounter, blackCounter, fontToUse):
+def set_up_board(whiteCounter, blackCounter, fontToUse):
     # Create a new sprite group to work with the graphics of PyGame easier.
     newGroup = pygame.sprite.Group()
     # Create a 1D list of a 2D grid.

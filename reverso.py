@@ -22,7 +22,7 @@ gameOver = False
 currentState = "mainMenu"
 
 # Initialise the board.
-boardList, boardSpriteGroup, whiteCounter, blackCounter, currentState = functions.set_up_board(pygame.display.get_surface(), whiteCounter, blackCounter, largeFont)
+boardList, boardSpriteGroup, whiteCounter, blackCounter, currentState = functions.set_up_board(whiteCounter, blackCounter, largeFont)
 
 # To run certain moves for debug purposes, uncomment the following code and replace the example list.
 """
