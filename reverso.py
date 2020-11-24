@@ -2,9 +2,6 @@ import pygame, functions, constants
 from pygame.constants import MOUSEBUTTONDOWN
 pygame.init()
 
-# Initialise global constants.
-constants.initialise()
-
 # Initialise top-level variables
 windowTitle = "Reverse!"
 stopGame = False
