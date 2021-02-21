@@ -1,6 +1,7 @@
-import pygame, functions, constants, classes
-from pygame.constants import MOUSEBUTTONUP
+import pygame
 pygame.init()
+import functions, constants, classes
+from pygame.constants import MOUSEBUTTONUP
 
 # Initialise top-level variables
 windowTitle = "Reverse!"
