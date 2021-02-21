@@ -1,5 +1,23 @@
 import pygame, classes, constants
 
+def draw_main_menu(buttonGroup):
+    pygame.display.get_surface().fill(constants.BACKGROUND_COLOUR)
+    for button in buttonGroup:
+        button.draw()
+
+    draw_text_centred(constants.TITLEFONT, "Reverse!", pygame.Color("black"), constants.RESOLUTION[0] / 2, 100)
+
+    pygame.display.update()
+
+def main_menu():
+    # Create buttons for the main menu and add them to a list.
+    buttonGroup = []
+    buttonGroup.append(classes.Button(constants.RESOLUTION[0] / 2 - 100, 300, 200, 40, 3, pygame.Color("black"), pygame.Color(100, 100, 100, 255), pygame.Color("white"), "Start Game", constants.MEDIUMFONT, pygame.Color("white")))
+    buttonGroup.append(classes.Button(constants.RESOLUTION[0] / 2 - 100, 375, 200, 40, 3, pygame.Color("black"), pygame.Color(100, 100, 100, 255), pygame.Color("white"), "View High Scores", constants.MEDIUMFONT, pygame.Color("white")))
+
+    # Draw the main menu.
+    draw_main_menu(buttonGroup)
+
 def set_up_board(whiteCounter, blackCounter, fontToUse):
     # Create a new sprite group to work with the graphics of PyGame easier.
     newGroup = pygame.sprite.Group()
@@ -112,13 +130,13 @@ def draw_board(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCoun
     if colourWins == True:
         if whiteToPlay == True:
             draw_text_centred(fontToUse, "White Wins!", "black", 480, 20)
-            draw_text_centred(fontToUse, "Click anywhere to quit.", "white", 160, 20)
+            draw_text_centred(fontToUse, "Click to continue.", "white", 160, 20)
         else:
             draw_text_centred(fontToUse, "Black Wins!", "white", 160, 20)
-            draw_text_centred(fontToUse, "Click anywhere to quit.", "black", 480, 20)
+            draw_text_centred(fontToUse, "Click to continue.", "black", 480, 20)
     elif draw == True:
         draw_text_centred(fontToUse, "It is a draw.", "white", 160, 20)
-        draw_text_centred(fontToUse, "Click anywhere to quit.", "black", 480, 20)
+        draw_text_centred(fontToUse, "Click to continue.", "black", 480, 20)
     else:
         if whiteToPlay == True:
             draw_text_centred(fontToUse, "White To Play", "black", 480, 20)
@@ -133,6 +151,7 @@ def draw_board(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCoun
 def draw_text_centred(fontToUse, text, colour, xCentre = 0, yCentre = 0):
     fontImage = fontToUse.render(text, True, colour).convert_alpha()
     pygame.display.get_surface().blit(fontImage, (xCentre - fontImage.get_width() / 2, yCentre - fontImage.get_height() / 2))
+    return pygame.Rect(xCentre - fontImage.get_width() / 2, yCentre - fontImage.get_height() / 2, fontImage.get_width(), fontImage.get_height())
 
 def make_move(boardList, boardSpriteGroup, fontToUse, x, y, whiteToPlay, whiteCounter, blackCounter):
     totalFlip = []

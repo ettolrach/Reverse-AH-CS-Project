@@ -1,5 +1,5 @@
-import pygame, functions, constants
-from pygame.constants import MOUSEBUTTONDOWN
+import pygame, functions, constants, classes
+from pygame.constants import MOUSEBUTTONUP
 pygame.init()
 
 # Initialise global constants.
@@ -36,22 +36,25 @@ for move in moves:
     boardList, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter = functions.make_move(boardList, boardSpriteGroup, largeFont, x, y, whiteToPlay, whiteCounter, blackCounter)
 """
 
+currentScene = classes.MainMenu()
+
 # Main game loop.
 while stopGame == False:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             stopGame = True
-        if event.type == MOUSEBUTTONDOWN:
-            if gameOver == True:
+        if event.type == MOUSEBUTTONUP:
+            newScene = currentScene.click()
+            if newScene == "mainmenu":
+                currentScene = classes.MainMenu()
+            if newScene == "game":
+                currentScene = classes.Game()
+            if newScene == "highscores":
+                currentScene = classes.HighScores()
+            if newScene == "quit":
                 stopGame = True
-            else:
-                # Get the x and y coordinates from the pixel value of the mouse click.
-                x = int((pygame.mouse.get_pos()[0] - constants.RIGHT_OFFSET) / constants.SQUARE_SIZE)
-                y = int((pygame.mouse.get_pos()[1] - constants.TOP_OFFSET) / constants.SQUARE_SIZE)
-                
-                boardList, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter, gameOver = functions.make_move(boardList, boardSpriteGroup, largeFont, x, y, whiteToPlay, whiteCounter, blackCounter)
 
-    pygame.display.update()
+    currentScene.update()
     clock.tick(20)
 
 pygame.quit()
