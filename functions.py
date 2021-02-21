@@ -1,6 +1,24 @@
 import pygame, classes, constants
 
-def set_up_board(screen, whiteCounter, blackCounter):
+def draw_main_menu(buttonGroup):
+    pygame.display.get_surface().fill(constants.BACKGROUND_COLOUR)
+    for button in buttonGroup:
+        button.draw()
+
+    draw_text_centred(constants.TITLEFONT, "Reverse!", pygame.Color("black"), constants.RESOLUTION[0] / 2, 100)
+
+    pygame.display.update()
+
+def main_menu():
+    # Create buttons for the main menu and add them to a list.
+    buttonGroup = []
+    buttonGroup.append(classes.Button(constants.RESOLUTION[0] / 2 - 100, 300, 200, 40, 3, pygame.Color("black"), pygame.Color(100, 100, 100, 255), pygame.Color("white"), "Start Game", constants.MEDIUMFONT, pygame.Color("white")))
+    buttonGroup.append(classes.Button(constants.RESOLUTION[0] / 2 - 100, 375, 200, 40, 3, pygame.Color("black"), pygame.Color(100, 100, 100, 255), pygame.Color("white"), "View High Scores", constants.MEDIUMFONT, pygame.Color("white")))
+
+    # Draw the main menu.
+    draw_main_menu(buttonGroup)
+
+def set_up_board(whiteCounter, blackCounter, fontToUse):
     # Create a new sprite group to work with the graphics of PyGame easier.
     newGroup = pygame.sprite.Group()
     # Create a 1D list of a 2D grid.
@@ -18,9 +36,11 @@ def set_up_board(screen, whiteCounter, blackCounter):
     blackCounter = 2
     whiteCounter = 2
 
-    newGroup.draw(screen)
+    currentState = "game"
 
-    return newBoard, newGroup, whiteCounter, blackCounter
+    draw_board(newGroup, fontToUse, False, whiteCounter, blackCounter)
+
+    return newBoard, newGroup, whiteCounter, blackCounter, currentState
 
 def change_colour_of_disc(boardList, index, whiteCounter, blackCounter):
     # Update the counters.
@@ -101,7 +121,7 @@ def place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay, whiteCounter, bla
 
     return boardList, boardSpriteGroup, whiteCounter, blackCounter
 
-def draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter, colourWins = False, draw = False):
+def draw_board(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter, colourWins = False, draw = False):
     # Draw the discs.
     pygame.display.get_surface().blit(constants.BACKGROUND, (0,0))
     boardSpriteGroup.draw(pygame.display.get_surface())
@@ -110,13 +130,13 @@ def draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blac
     if colourWins == True:
         if whiteToPlay == True:
             draw_text_centred(fontToUse, "White Wins!", "black", 480, 20)
-            draw_text_centred(fontToUse, "Click anywhere to quit.", "white", 160, 20)
+            draw_text_centred(fontToUse, "Click to continue.", "white", 160, 20)
         else:
             draw_text_centred(fontToUse, "Black Wins!", "white", 160, 20)
-            draw_text_centred(fontToUse, "Click anywhere to quit.", "black", 480, 20)
+            draw_text_centred(fontToUse, "Click to continue.", "black", 480, 20)
     elif draw == True:
         draw_text_centred(fontToUse, "It is a draw.", "white", 160, 20)
-        draw_text_centred(fontToUse, "Click anywhere to quit.", "black", 480, 20)
+        draw_text_centred(fontToUse, "Click to continue.", "black", 480, 20)
     else:
         if whiteToPlay == True:
             draw_text_centred(fontToUse, "White To Play", "black", 480, 20)
@@ -126,10 +146,12 @@ def draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blac
     # Draw the disc counters.
     draw_text_centred(fontToUse, str(blackCounter), "white", 160, 700)
     draw_text_centred(fontToUse, str(whiteCounter), "black", 480, 700)
+    pygame.display.update()
 
 def draw_text_centred(fontToUse, text, colour, xCentre = 0, yCentre = 0):
     fontImage = fontToUse.render(text, True, colour).convert_alpha()
     pygame.display.get_surface().blit(fontImage, (xCentre - fontImage.get_width() / 2, yCentre - fontImage.get_height() / 2))
+    return pygame.Rect(xCentre - fontImage.get_width() / 2, yCentre - fontImage.get_height() / 2, fontImage.get_width(), fontImage.get_height())
 
 def make_move(boardList, boardSpriteGroup, fontToUse, x, y, whiteToPlay, whiteCounter, blackCounter):
     totalFlip = []
@@ -151,11 +173,11 @@ def make_move(boardList, boardSpriteGroup, fontToUse, x, y, whiteToPlay, whiteCo
 
         if whiteCounter + blackCounter == 64:
             if whiteCounter > blackCounter:
-                draw_everything(boardSpriteGroup, fontToUse, True, whiteCounter, blackCounter, True)
+                draw_board(boardSpriteGroup, fontToUse, True, whiteCounter, blackCounter, True)
             elif blackCounter > whiteCounter:
-                draw_everything(boardSpriteGroup, fontToUse, False, whiteCounter, blackCounter, True)
+                draw_board(boardSpriteGroup, fontToUse, False, whiteCounter, blackCounter, True)
             else:
-                draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter, False, True)
+                draw_board(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter, False, True)
             gameOver = True
             return boardList, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter, gameOver
 
@@ -164,11 +186,11 @@ def make_move(boardList, boardSpriteGroup, fontToUse, x, y, whiteToPlay, whiteCo
         if are_legal_moves_available(boardList, x, y, whiteToPlay) != True:
             whiteToPlay = not whiteToPlay
             if are_legal_moves_available(boardList, x, y, whiteToPlay) != True:
-                draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter, True)
+                draw_board(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter, True)
                 gameOver = True
                 return boardList, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter, gameOver
 
-    draw_everything(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter)
+    draw_board(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter)
     return boardList, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter, gameOver
 
 def insertion_sort(listToSort):
