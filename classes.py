@@ -38,13 +38,6 @@ class Button(pygame.sprite.Sprite):
         # Draw this text.
         pygame.display.get_surface().blit(fontImage, (self.rect.x + (self.rect.width / 2 - fontImage.get_width() / 2), self.rect.y + (self.rect.height / 2 - fontImage.get_height() / 2)))
 
-        # Draw the background colour of the button.
-        #self.image.fill(self.backgroundColour)
-        # Blit the text on top of the background colour.
-        # The calculations are there to centre the text.
-        #self.image.blit(fontImage, (270, 300))
-        #self.image.blit(fontImage, ((self.rect.x + self.rect.width / 2) - fontImage.get_width() / 2, (self.rect.y + self.rect.height / 2) - fontImage.get_height() / 2))
-
     def collide(self, pos):
         if (pos[0] >= self.rect.x and pos[0] <= self.rect.x + self.rect.width) and (pos[1] >= self.rect.y and pos[1] <= self.rect.y + self.rect.height):
             return True
