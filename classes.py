@@ -44,27 +44,14 @@ class Button(pygame.sprite.Sprite):
         else:
             return False
 
-class Scene():
-    def __init__(self, bgColour):
+class ButtonScene():
+    def __init__(self, buttonGroup, bgColour):
+        self.buttonGroup = buttonGroup
         # When the scene gets shown for the first time, the whole screen will be cleared.
         pygame.display.get_surface().fill(bgColour)
         self.update([pygame.Rect(0, 0, constants.RESOLUTION[0], constants.RESOLUTION[1])])
     
-    def update(self, rects = [None]):
-        pygame.display.update(rects)
-
-class MainMenu(Scene):
-    def __init__(self):
-        # Create buttons in the buttonGroup.
-        self.buttonGroup = [
-            Button(constants.RESOLUTION[0] / 2 - 100, 300, 200, 40, 3, pygame.Color("black"), pygame.Color(100, 100, 100, 255), pygame.Color("white"), "Start Game", constants.MEDIUMFONT, pygame.Color("white"), "game"),
-            Button(constants.RESOLUTION[0] / 2 - 100, 375, 200, 40, 3, pygame.Color("black"), pygame.Color(100, 100, 100, 255), pygame.Color("white"), "View High Scores", constants.MEDIUMFONT, pygame.Color("white"), "highscores"),
-            Button(constants.RESOLUTION[0] / 2 - 100, 450, 200, 40, 3, pygame.Color("black"), pygame.Color(100, 100, 100, 255), pygame.Color("white"), "Quit", constants.MEDIUMFONT, pygame.Color("white"), "quit")
-        ]
-
-        super().__init__(constants.BACKGROUND_COLOUR)
-    
-    def update(self, changedAreas = []):
+    def update(self, changedRects = [None]):
         # Check if any buttons is hovered on and draw each button.
         for button in self.buttonGroup:
             if button.collide(pygame.mouse.get_pos()):
@@ -72,11 +59,9 @@ class MainMenu(Scene):
             else:
                 button.active = False
             button.draw()
-            changedAreas.append(button.rect)
+            changedRects.append(button.rect)
 
-        # Draw the name of the game and append the area where the text is to the list changedAreas.
-        changedAreas.append(functions.draw_text_centred(constants.TITLEFONT, "Reverse!", pygame.Color("black"), constants.RESOLUTION[0] / 2, 100))
-        super().update(changedAreas)
+        pygame.display.update(changedRects)
     
     def click(self):
         for button in self.buttonGroup:
@@ -84,13 +69,38 @@ class MainMenu(Scene):
                 return button.sceneName
         return ""
 
-class Game(Scene):
+class MainMenu(ButtonScene):
+    def __init__(self):
+        # Create buttons in the buttonGroup.
+        buttonGroup = [
+            Button(constants.RESOLUTION[0] / 2 - 100, 300, 200, 40, 3, pygame.Color("black"), pygame.Color(100, 100, 100, 255), pygame.Color("white"), "Start Game", constants.MEDIUMFONT, pygame.Color("white"), "game"),
+            Button(constants.RESOLUTION[0] / 2 - 100, 375, 200, 40, 3, pygame.Color("black"), pygame.Color(100, 100, 100, 255), pygame.Color("white"), "View High Scores", constants.MEDIUMFONT, pygame.Color("white"), "highscores"),
+            Button(constants.RESOLUTION[0] / 2 - 100, 450, 200, 40, 3, pygame.Color("black"), pygame.Color(100, 100, 100, 255), pygame.Color("white"), "Quit", constants.MEDIUMFONT, pygame.Color("white"), "quit")
+        ]
+
+        # Draw the name of the game and append the area where the text is to the list changedAreas.
+        functions.draw_text_centred(constants.TITLEFONT, "Reverse!", pygame.Color("black"), constants.RESOLUTION[0] / 2, 100)
+
+        super().__init__(buttonGroup, constants.BACKGROUND_COLOUR)
+
+    def update(self, changedAreas = []):
+        # Draw the name of the game and append the area where the text is to the list changedAreas.
+        changedAreas.append(functions.draw_text_centred(constants.TITLEFONT, "Reverse!", pygame.Color("black"), constants.RESOLUTION[0] / 2, 100))
+        super().update(changedAreas)
+    
+    def click(self):
+        return super().click()
+
+class Game():
     def __init__(self):
         self.whiteCounter = 0
         self.blackCounter = 0
         self.gameOver = False
         self.whiteToPlay = False
         self.boardList, self.boardSpriteGroup, self.whiteCounter, self.blackCounter, self.currentState = functions.set_up_board(self.whiteCounter, self.blackCounter, constants.LARGEFONT)
+    
+    def update(self):
+        pygame.display.update()
     
     def click(self):
         if self.gameOver == True:
@@ -102,30 +112,18 @@ class Game(Scene):
             
             self.boardList, self.boardSpriteGroup, self.whiteToPlay, self.whiteCounter, self.blackCounter, self.gameOver = functions.make_move(self.boardList, self.boardSpriteGroup, constants.LARGEFONT, x, y, self.whiteToPlay, self.whiteCounter, self.blackCounter)
 
-class HighScores(Scene):
+class HighScores(ButtonScene):
     def __init__(self):
-        self.buttonGroup = [
+        buttonGroup = [
             Button(constants.RESOLUTION[0]//3 - 175, 650, 250, 40, 3, pygame.Color("black"), pygame.Color(100, 100, 100, 255), pygame.Color("white"), "Back to Main Menu", constants.MEDIUMFONT, pygame.Color("white"), "mainmenu")
         ]
-        super().__init__(constants.BACKGROUND_COLOUR)
+        super().__init__(buttonGroup, constants.BACKGROUND_COLOUR)
     
     def update(self, changedAreas = []):
-        # Check if any buttons is hovered on and draw each button.
-        for button in self.buttonGroup:
-            if button.collide(pygame.mouse.get_pos()):
-                button.active = True
-            else:
-                button.active = False
-            button.draw()
-            changedAreas.append(button.rect)
-        
         super().update(changedAreas)
     
     def click(self):
-        for button in self.buttonGroup:
-            if button.active == True:
-                return button.sceneName
-        return ""
+        return super().click()
 
 class Disc(pygame.sprite.Sprite):
     def __init__(self, isWhiteInitially, xPos, yPos):
