@@ -193,10 +193,12 @@ def make_move(boardList, boardSpriteGroup, fontToUse, x, y, whiteToPlay, whiteCo
     draw_board(boardSpriteGroup, fontToUse, whiteToPlay, whiteCounter, blackCounter)
     return boardList, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter, gameOver
 
-def insertion_sort(listToSort):
-    for indexToSort in range(len(listToSort)):
+def insertion_sort(scoreRecordListToSort):
+    for indexToSort in range(1, len(scoreRecordListToSort)):
         for currentIndex in range(indexToSort, 0, -1):
+            if scoreRecordListToSort[currentIndex - 1].discs > scoreRecordListToSort[currentIndex].discs:
+                break
             # Swap the current index and the previous.
-            listToSort[currentIndex], listToSort[currentIndex-1] = listToSort[currentIndex-1], listToSort[currentIndex]
+            scoreRecordListToSort[currentIndex], scoreRecordListToSort[currentIndex-1] = scoreRecordListToSort[currentIndex-1], scoreRecordListToSort[currentIndex]
 
-    return listToSort
+    return scoreRecordListToSort
