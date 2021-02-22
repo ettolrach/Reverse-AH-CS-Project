@@ -1,7 +1,8 @@
-import sqlite3, classes
+import sqlite3, classes, pathlib
 from constants import DATABASE_PATH
 
 def prepare_database():
+    pathlib.Path("./db").mkdir(parents=True, exist_ok=True)
     databaseConnection = None
     # Attempt to connect to the database file.
     try:

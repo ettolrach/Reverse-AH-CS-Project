@@ -16,18 +16,21 @@ currentScene = classes.MainMenu()
 
 # Set up database and create some sample data.
 database.prepare_database()
-database.drop_highscore_table()
 database.create_highscore_table()
-database.add_new_highscore("Alice", 35)
-database.add_new_highscore("Bob", 39)
-database.add_new_highscore("Cerys", 40)
-database.add_new_highscore("Dean", 42)
-database.add_new_highscore("Emily", 43)
-database.add_new_highscore("Frederick", 48)
-database.add_new_highscore("Garry", 49)
-database.add_new_highscore("Hannah", 51)
-database.add_new_highscore("Ian", 54)
-database.add_new_highscore("Jebeddiah", 58)
+# Check if there are already scores in the database.
+scores = database.get_highscores()
+# If there are no scores, then add sample ones.
+if len(scores) < 1:
+    database.add_new_highscore("Alice", 35)
+    database.add_new_highscore("Bob", 39)
+    database.add_new_highscore("Cerys", 40)
+    database.add_new_highscore("Dean", 42)
+    database.add_new_highscore("Emily", 43)
+    database.add_new_highscore("Frederick", 48)
+    database.add_new_highscore("Garry", 49)
+    database.add_new_highscore("Hannah", 51)
+    database.add_new_highscore("Ian", 54)
+    database.add_new_highscore("Jebeddiah", 58)
 
 # Main game loop.
 while stopGame == False:
