@@ -51,9 +51,9 @@ class ButtonScene():
         self.buttonGroup = buttonGroup
         # When the scene gets shown for the first time, the whole screen will be cleared.
         pygame.display.get_surface().fill(bgColour)
-        self.update([pygame.Rect(0, 0, constants.RESOLUTION[0], constants.RESOLUTION[1])])
+        self.update()
     
-    def update(self, changedRects = [None]):
+    def update(self):
         # Check if any buttons is hovered on and draw each button.
         for button in self.buttonGroup:
             if button.collide(pygame.mouse.get_pos()):
@@ -61,9 +61,8 @@ class ButtonScene():
             else:
                 button.active = False
             button.draw()
-            changedRects.append(button.rect)
 
-        pygame.display.update(changedRects)
+        pygame.display.update()
     
     def click(self):
         for button in self.buttonGroup:
@@ -85,8 +84,8 @@ class MainMenu(ButtonScene):
         # Draw the name of the game.
         pygame.display.update(functions.draw_text_centred(constants.TITLEFONT, "Reverse!", pygame.Color("black"), constants.RESOLUTION[0] / 2, 100))
 
-    def update(self, changedAreas = []):
-        super().update(changedAreas)
+    def update(self):
+        super().update()
     
     def click(self):
         return super().click()
@@ -139,8 +138,8 @@ class HighScores(ButtonScene):
             functions.draw_text_centred(constants.LARGEFONT, scores[i].name, pygame.Color("black"), constants.RESOLUTION[0]/2, 150 + 40 * i)            
             functions.draw_text_centred(constants.LARGEFONT, str(scores[i].discs), pygame.Color("black"), constants.RESOLUTION[0] - 50, 150 + 40 * i)
     
-    def update(self, changedAreas = []):
-        super().update(changedAreas)
+    def update(self):
+        super().update()
     
     def click(self):
         return super().click()
@@ -176,7 +175,6 @@ class ScoreRecord:
 
 class NameScreen(ButtonScene):
     def __init__(self):
-        changedAreas = []
         self.buttonGroup = [
             Button(constants.RESOLUTION[0] - 115, constants.RESOLUTION[1]/2 + 80, 90, 40, 3, pygame.Color("black"), pygame.Color(100, 100, 100, 255), pygame.Color("white"), "Play", constants.MEDIUMFONT, pygame.Color("white"), "game")
         ]
@@ -186,11 +184,6 @@ class NameScreen(ButtonScene):
             TextBox(50, constants.RESOLUTION[1] / 2 - 20, 450, 40, 3, pygame.Color("white"), pygame.Color(100, 100, 100, 255), pygame.Color("black"), constants.MEDIUMFONT, pygame.Color("black")),
             TextBox(50, constants.RESOLUTION[1] / 2 + 80, 450, 40, 3, pygame.Color("white"), pygame.Color(100, 100, 100, 255), pygame.Color("black"), constants.MEDIUMFONT, pygame.Color("black"))
         ]
-        # Add the textboxes to the changed areas to be drawn.
-        changedAreas += [
-            pygame.Rect(50, constants.RESOLUTION[1] / 2 - 20, 450, 40),
-            pygame.Rect(50, constants.RESOLUTION[1] / 2 + 80, 450, 40)
-        ]
         
         # Run the parent constructor and update the screen.
         super().__init__(self.buttonGroup, constants.BACKGROUND_COLOUR)
@@ -198,18 +191,15 @@ class NameScreen(ButtonScene):
         # Add labels to the textboxes and add those to the changed areas too.
         fontImage = constants.MEDIUMFONT.render("Player 1 (black)'s name:", True, pygame.Color("black")).convert_alpha()
         pygame.display.get_surface().blit(fontImage, (50, constants.RESOLUTION[1] / 2 - 50))
-        changedAreas.append(pygame.Rect(50, constants.RESOLUTION[1] / 2 - 50, fontImage.get_width(), fontImage.get_height()))
 
         fontImage = constants.MEDIUMFONT.render("Player 2 (white)'s name:", True, pygame.Color("black")).convert_alpha()
         pygame.display.get_surface().blit(fontImage, (50, constants.RESOLUTION[1] / 2 + 50))
-        changedAreas.append(pygame.Rect(50, constants.RESOLUTION[1] / 2 + 50, fontImage.get_width(), fontImage.get_height()))
-        pygame.display.update(changedAreas)
+        pygame.display.update()
 
-    def update(self, changedRects = [None]):
+    def update(self):
         for textbox in self.textboxGroup:
             textbox.draw()
-            changedRects.append(textbox.rect)
-        super().update(changedRects)
+        super().update()
     
     def click(self):
         for textbox in self.textboxGroup:
