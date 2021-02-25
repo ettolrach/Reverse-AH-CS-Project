@@ -204,7 +204,13 @@ class NameScreen(ButtonScene):
                     textbox.active = False
                 # Otherwise, the appropriate scene should be loaded.
                 else:
-                    return result
+                    # Except for if no name was entered.
+                    empty = False
+                    for box in self.textboxGroup:
+                        if len(box.text) == 0:
+                            empty = True
+                    if empty == False:
+                        return result
 
     def keyPress(self, e):
         for textbox in self.textboxGroup:
