@@ -84,11 +84,6 @@ class MainMenu(ButtonScene):
         # Draw the name of the game.
         pygame.display.update(functions.draw_text_centred(constants.TITLEFONT, "Reverse!", pygame.Color("black"), constants.RESOLUTION[0] / 2, 100))
 
-    def update(self):
-        super().update()
-    
-    def click(self):
-        return super().click()
 
 class Game():
     def __init__(self, names):
@@ -137,12 +132,6 @@ class HighScores(ButtonScene):
             functions.draw_text_centred(constants.LARGEFONT, str(i+1) + ". ", pygame.Color("black"), 50, 150 + 40 * i)
             functions.draw_text_centred(constants.LARGEFONT, scores[i].name, pygame.Color("black"), constants.RESOLUTION[0]/2, 150 + 40 * i)            
             functions.draw_text_centred(constants.LARGEFONT, str(scores[i].discs), pygame.Color("black"), constants.RESOLUTION[0] - 50, 150 + 40 * i)
-    
-    def update(self):
-        super().update()
-    
-    def click(self):
-        return super().click()
 
 class Disc(pygame.sprite.Sprite):
     def __init__(self, isWhiteInitially, xPos, yPos):
