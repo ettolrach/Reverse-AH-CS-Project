@@ -133,6 +133,8 @@ class HighScores(ButtonScene):
             functions.draw_text_centred(constants.LARGEFONT, scores[i].name, pygame.Color("black"), constants.RESOLUTION[0]/2, 150 + 40 * i)            
             functions.draw_text_centred(constants.LARGEFONT, str(scores[i].discs), pygame.Color("black"), constants.RESOLUTION[0] - 50, 150 + 40 * i)
 
+        pygame.display.update()
+
 class Disc(pygame.sprite.Sprite):
     def __init__(self, isWhiteInitially, xPos, yPos):
         pygame.sprite.Sprite.__init__(self)
