@@ -114,8 +114,10 @@ class Game():
             # Get the x and y coordinates from the pixel value of the mouse click.
             x = int((pygame.mouse.get_pos()[0] - constants.RIGHT_OFFSET) / constants.SQUARE_SIZE)
             y = int((pygame.mouse.get_pos()[1] - constants.TOP_OFFSET) / constants.SQUARE_SIZE)
-            
-            self.boardList, self.boardSpriteGroup, self.whiteToPlay, self.whiteCounter, self.blackCounter, self.gameOver = functions.make_move(self.boardList, self.boardSpriteGroup, constants.LARGEFONT, x, y, self.whiteToPlay, self.whiteCounter, self.blackCounter)
+
+            # Make sure that the coordinates aren't out of range.
+            if x < 8 and y < 8:
+                self.boardList, self.boardSpriteGroup, self.whiteToPlay, self.whiteCounter, self.blackCounter, self.gameOver = functions.make_move(self.boardList, self.boardSpriteGroup, constants.LARGEFONT, x, y, self.whiteToPlay, self.whiteCounter, self.blackCounter)
 
 class HighScores(ButtonScene):
     def __init__(self):
