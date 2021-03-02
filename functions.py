@@ -99,11 +99,10 @@ def get_all_discs_to_flip(boardList, x, y, whiteToPlay):
     return totalFlip
 
 def are_legal_moves_available(boardList, x, y, whiteToPlay):
-    # Run through all of the indicies.
+    # Run through all of the indices.
     for y in range(constants.BOARD_SIZE):
         for x in range(constants.BOARD_SIZE):
-            # Use the make_move function to check if there is a move available.
-            # If at any point there is a move available, then there are indeed legal moves available.
+            # This function checks if there are any discs that need to be flipped if the user would have chosen to make this move. If at any point this function returns a disc, then it was a legal move and "true" can be returned.
             if get_all_discs_to_flip(boardList, x, y, whiteToPlay) != []:
                 return True
     return False
