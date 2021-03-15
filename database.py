@@ -14,7 +14,6 @@ def prepare_database():
     finally:
         if databaseConnection != None:
             databaseConnection.close()
-    return databaseConnection
 
 def drop_highscore_table():
     execute_sql("DROP TABLE highscores;")
