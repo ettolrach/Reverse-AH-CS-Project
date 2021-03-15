@@ -167,8 +167,8 @@ def make_move(boardList, boardSpriteGroup, fontToUse, x, y, whiteToPlay, whiteCo
         # and place the disc at the clicked coordinate and update appropriate variables.
         boardList, boardSpriteGroup, whiteCounter, blackCounter = place_disc(boardList, x, y, boardSpriteGroup, whiteToPlay, whiteCounter, blackCounter)
         # Log the move for debugging purposes.
-        xLetter = chr(97+x)
-        print(xLetter + str(y+1), end = " ")
+        # xLetter = chr(97+x)
+        # print(xLetter + str(y+1), end = " ")
 
         if whiteCounter + blackCounter == 64:
             if whiteCounter > blackCounter:
