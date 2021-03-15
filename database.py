@@ -7,7 +7,6 @@ def prepare_database():
     # Attempt to connect to the database file.
     try:
         databaseConnection = sqlite3.connect(DATABASE_PATH)
-        print(sqlite3.version)
     # Report an error if one appears.
     except sqlite3.Error as e:
         print(e)
